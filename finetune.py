@@ -20,13 +20,20 @@ def train(
     base_model: str = "VietAI/gpt-neo-1.3B-vietnamese-news",    # the only required argument, "bigscience/bloomz-7b1-mt"
     data_path: str = "./GenMedGPT-5k.json", # "./chatdoctor-200k.json"
     output_dir: str = "./lora-chatdoctor-5k",   # "./lora-chatdoctor-200k"
+    load_in_8bit: bool = True, # if True, load model on GPU 8bit to reduce memory used, may affect performance slightly
     # training hyperparams
+    seed: int = 42,
     batch_size: int = 128,    # 128
     micro_batch_size: int = 4,  # 4
     num_epochs: int = 3,
     learning_rate: float = 3e-4,
     cutoff_len: int = 256,
     val_set_size: int = 500,    # 2000
+    warmup_steps: int = 10,
+    logging_steps: int = 5,
+    eval_steps: int = 10,
+    save_steps: int = 10,
+    save_total_limit: int = 3,
     # lora hyperparams
     lora_r: int = 8,
     lora_alpha: int = 16,
@@ -50,6 +57,7 @@ def train(
         f"base_model: {base_model}\n"
         f"data_path: {data_path}\n"
         f"output_dir: {output_dir}\n"
+        f"load_in_8bit: {load_in_8bit}\n"
         f"batch_size: {batch_size}\n"
         f"micro_batch_size: {micro_batch_size}\n"
         f"num_epochs: {num_epochs}\n"
@@ -95,7 +103,7 @@ def train(
 
     model = AutoModelForCausalLM.from_pretrained(
         base_model,
-        load_in_8bit=True,
+        load_in_8bit=load_in_8bit,
         torch_dtype=torch.float16,
         device_map=device_map,
     )
@@ -193,7 +201,7 @@ def train(
 
     if val_set_size > 0:
         train_val = data["train"].train_test_split(
-            test_size=val_set_size, shuffle=True, seed=42
+            test_size=val_set_size, shuffle=True, seed=seed
         )
         train_data = (
             train_val["train"].shuffle().map(generate_and_tokenize_prompt)
@@ -213,18 +221,18 @@ def train(
         args=transformers.TrainingArguments(
             per_device_train_batch_size=micro_batch_size,
             gradient_accumulation_steps=gradient_accumulation_steps,
-            warmup_steps=100,
+            warmup_steps=warmup_steps,
             num_train_epochs=num_epochs,
             learning_rate=learning_rate,
             fp16=True,
-            logging_steps=10,
+            logging_steps=logging_steps,
             optim="adamw_torch",
             evaluation_strategy="steps" if val_set_size > 0 else "no",
             save_strategy="steps",
-            eval_steps=200 if val_set_size > 0 else None,
-            save_steps=200,
+            eval_steps=eval_steps if val_set_size > 0 else None,
+            save_steps=save_steps,
             output_dir=output_dir,
-            save_total_limit=3,
+            save_total_limit=save_total_limit,
             load_best_model_at_end=True if val_set_size > 0 else False,
             ddp_find_unused_parameters=False if ddp else None,
             group_by_length=group_by_length,

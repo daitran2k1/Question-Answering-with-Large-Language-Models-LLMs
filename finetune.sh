@@ -24,10 +24,6 @@ export lora_target_modules='[q_proj, v_proj]'
 export train_on_inputs=True
 export group_by_length=False
 
-export wandb_project=''
-export wandb_run_name=''
-export wandb_watch=''
-export wandb_log_model=''
 export resume_from_checkpoint=None
 
 python finetune.py \
@@ -53,8 +49,4 @@ python finetune.py \
     --lora_target_modules $lora_target_modules \
     --train_on_inputs $train_on_inputs \
     --group_by_length $group_by_length \
-    --wandb_project $wandb_project \
-    --wandb_run_name $wandb_run_name \
-    --wandb_watch $wandb_watch \
-    --wandb_log_model $wandb_log_model \
     --resume_from_checkpoint $resume_from_checkpoint

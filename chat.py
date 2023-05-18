@@ -96,14 +96,14 @@ def load_model(model_name, eight_bit=0, device_map="auto"):
 
 load_model("./lora-chatdoctor-5k/")
 
-First_chat = "ChatDoctor: I am ChatDoctor, what medical questions do you have?"
+First_chat = "Nhân viên tổng đài của Viettel: Chào bạn, mình là nhân viên tổng đài của Viettel, mình có thể giúp gì cho bạn?"
 print(First_chat)
 history = []
 history.append(First_chat)
 
 def go():
-    invitation = "ChatDoctor: "
-    human_invitation = "Patient: "
+    invitation = "Nhân viên tổng đài của Viettel: "
+    human_invitation = "Khách hàng: "
 
     # input
     msg = input(human_invitation)
@@ -111,7 +111,7 @@ def go():
 
     history.append(human_invitation + msg)
 
-    fulltext = "If you are a doctor, please answer the medical questions based on the patient's description. \n\n" + "\n\n".join(history) + "\n\n" + invitation
+    fulltext = "Nếu bạn là nhân viên tổng đài của Viettel, hãy trả lời những câu hỏi về gói cước dựa trên mô tả của khách hàng. \n\n" + "\n\n".join(history) + "\n\n" + invitation
     #fulltext = "\n\n".join(history) + "\n\n" + invitation
     
     print('SENDING==========')

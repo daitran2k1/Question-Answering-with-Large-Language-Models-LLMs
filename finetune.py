@@ -273,23 +273,23 @@ def train(
 def generate_prompt(data_point):
     # sorry about the formatting disaster gotta move fast
     if data_point["input"]:
-        return f"""Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.  # noqa: E501
+        return f"""Dưới đây là một chỉ dẫn mô tả một nhiệm vụ, đi cùng với một đầu vào cung cấp thêm ngữ cảnh. Viết một phản hồi hoàn thành yêu cầu một cách thích hợp.
 
-### Instruction:
+### Chỉ dẫn:
 {data_point["instruction"]}
 
-### Input:
+### Đầu vào:
 {data_point["input"]}
 
-### Response:
+### Phản hồi:
 {data_point["output"]}"""
     else:
-        return f"""Below is an instruction that describes a task. Write a response that appropriately completes the request.  # noqa: E501
+        return f"""Dưới đây là một chỉ dẫn mô tả một nhiệm vụ. Viết một phản hồi hoàn thành yêu cầu một cách thích hợp.
 
-### Instruction:
+### Đầu vào:
 {data_point["instruction"]}
 
-### Response:
+### Phản hồi:
 {data_point["output"]}"""
 
 

@@ -21,8 +21,8 @@ def train(
     data_path: str = "./GenMedGPT-5k.json", # "./chatdoctor-200k.json"
     output_dir: str = "./lora-chatdoctor-5k",   # "./lora-chatdoctor-200k"
     # training hyperparams
-    batch_size: int = 4,    # 128
-    micro_batch_size: int = 1,  # 4
+    batch_size: int = 128,    # 128
+    micro_batch_size: int = 4,  # 4
     num_epochs: int = 3,
     learning_rate: float = 3e-4,
     cutoff_len: int = 256,
